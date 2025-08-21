@@ -263,29 +263,18 @@
         const userEmail = document.getElementById('userEmail').value;
         const userCompany = document.getElementById('userCompany').value;
 
-        // Create Excel data
-        const excelData = {
-            userInfo: {
-                name: userName,
-                phone: userPhone,
-                email: userEmail,
-                company: userCompany,
-                date: new Date().toLocaleDateString('es-MX')
-            },
-            products: cart.map(item => ({
-                name: item.name,
-                description: item.description,
-                category: getCategoryLabel(item.category),
-                quantity: item.quantity,
-                unitPrice: item.price,
-                totalPrice: item.price * item.quantity,
-                energyCost: item.energyCost,
-                monthlyEnergyCost: item.energyCost * item.quantity
-            }))
-        };
-
-        // For now, create a simple CSV file
-        createAndDownloadCSV(excelData);
+        // Create PDF instead of CSV
+        generatePDF({
+            name: userName,
+            phone: userPhone,
+            email: userEmail,
+            company: userCompany,
+            date: new Date().toLocaleDateString('es-MX', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })
+        });
 
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('userInfoModal'));
@@ -299,41 +288,198 @@
         document.getElementById('userInfoForm').classList.remove('was-validated');
     }
 
-    function createAndDownloadCSV(data) {
-        let csv = 'COTIZACIÓN IATAMA\n\n';
-        csv += 'INFORMACIÓN DE CONTACTO\n';
-        csv += `Nombre:,${data.userInfo.name}\n`;
-        csv += `Teléfono:,${data.userInfo.phone}\n`;
-        csv += `Email:,${data.userInfo.email}\n`;
-        csv += `Empresa:,${data.userInfo.company || 'N/A'}\n`;
-        csv += `Fecha:,${data.userInfo.date}\n\n`;
+    function generatePDF(userInfo) {
+        // Initialize jsPDF with A4 format
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
         
-        csv += 'PRODUCTOS COTIZADOS\n';
-        csv += 'Producto,Descripción,Categoría,Cantidad,Precio Unitario,Precio Total,Costo Energético Mensual\n';
+        // IATAMA Colors based on the CSS variables
+        const primaryColor = [46, 134, 171]; // #2E86AB
+        const darkColor = [11, 35, 65]; // #0b2341
+        const grayColor = [68, 68, 68]; // #444444
         
-        let totalGeneral = 0;
-        let totalEnergy = 0;
+        // Document margins
+        const marginLeft = 20;
+        const marginRight = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const contentWidth = pageWidth - marginLeft - marginRight;
         
-        data.products.forEach(product => {
-            csv += `"${product.name}","${product.description}","${product.category}",${product.quantity},$${product.unitPrice},$${product.totalPrice},$${product.monthlyEnergyCost}\n`;
-            totalGeneral += product.totalPrice;
-            totalEnergy += product.monthlyEnergyCost;
+        // Header with company branding
+        doc.setFillColor(...primaryColor);
+        doc.rect(0, 0, pageWidth, 40, 'F');
+        
+        // Company name
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(28);
+        doc.setFont('helvetica', 'bold');
+        doc.text('IATAMA', marginLeft, 20);
+        
+        // Company tagline
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Ingeniería Aplicada en Tratamiento de Agua y Medio Ambiente', marginLeft, 28);
+        
+        // Document title
+        doc.setTextColor(...darkColor);
+        doc.setFontSize(20);
+        doc.setFont('helvetica', 'bold');
+        doc.text('COTIZACIÓN', pageWidth / 2, 55, { align: 'center' });
+        
+        // Quote number and date
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...grayColor);
+        const quoteNumber = 'COT-' + Date.now().toString().slice(-8);
+        doc.text(`Número de cotización: ${quoteNumber}`, marginLeft, 65);
+        doc.text(`Fecha: ${userInfo.date}`, pageWidth - marginRight, 65, { align: 'right' });
+        
+        // Client information section
+        let yPosition = 80;
+        doc.setFillColor(245, 247, 250);
+        doc.rect(marginLeft, yPosition - 5, contentWidth, 35, 'F');
+        
+        doc.setTextColor(...darkColor);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('INFORMACIÓN DEL CLIENTE', marginLeft + 5, yPosition);
+        
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...grayColor);
+        yPosition += 8;
+        doc.text(`Cliente: ${userInfo.name}`, marginLeft + 5, yPosition);
+        yPosition += 6;
+        doc.text(`Empresa: ${userInfo.company || 'Particular'}`, marginLeft + 5, yPosition);
+        yPosition += 6;
+        doc.text(`Teléfono: ${userInfo.phone}`, marginLeft + 5, yPosition);
+        doc.text(`Email: ${userInfo.email}`, pageWidth / 2, yPosition);
+        
+        // Products table
+        yPosition = 125;
+        doc.setTextColor(...darkColor);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('PRODUCTOS COTIZADOS', marginLeft, yPosition);
+        
+        // Prepare table data
+        const tableHeaders = [['Producto', 'Descripción', 'Categoría', 'Cant.', 'P. Unit.*', 'Subtotal*']];
+        const tableData = cart.map(item => [
+            item.name,
+            item.description.length > 35 ? item.description.substring(0, 32) + '...' : item.description,
+            getCategoryLabel(item.category),
+            item.quantity.toString(),
+            `$${item.price.toLocaleString('es-MX')}`,
+            `$${(item.price * item.quantity).toLocaleString('es-MX')}`
+        ]);
+        
+        // Calculate totals
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const totalEnergyCost = cart.reduce((sum, item) => sum + (item.energyCost * item.quantity), 0);
+        
+        // Add totals row
+        tableData.push(['', '', 'TOTALES:', totalItems.toString(), '', `$${totalPrice.toLocaleString('es-MX')}`]);
+        
+        // Generate table with autoTable plugin
+        doc.autoTable({
+            head: tableHeaders,
+            body: tableData,
+            startY: yPosition + 5,
+            theme: 'grid',
+            headStyles: {
+                fillColor: primaryColor,
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                fontSize: 10
+            },
+            bodyStyles: {
+                fontSize: 9,
+                textColor: grayColor
+            },
+            alternateRowStyles: {
+                fillColor: [248, 249, 250]
+            },
+            columnStyles: {
+                0: { cellWidth: 38 },
+                1: { cellWidth: 55 },
+                2: { cellWidth: 30 },
+                3: { cellWidth: 15, halign: 'center' },
+                4: { cellWidth: 22, halign: 'right' },
+                5: { cellWidth: 25, halign: 'right' }
+            },
+            margin: { left: marginLeft, right: marginRight },
+            didDrawCell: function(data) {
+                // Bold the total row
+                if (data.row.index === tableData.length - 1) {
+                    doc.setFont('helvetica', 'bold');
+                }
+            }
         });
         
-        csv += `\nTOTAL GENERAL:,,,,,,$${totalGeneral}\n`;
-        csv += `COSTO ENERGÉTICO MENSUAL ESTIMADO:,,,,,,$${totalEnergy}\n`;
-        csv += '\n*Los precios mostrados son de referencia. Un asesor de IATAMA le proporcionará los precios finales y opciones de financiamiento.\n';
-
-        // Create blob and download
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `cotizacion_iatama_${Date.now()}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Important notes section
+        yPosition = doc.lastAutoTable.finalY + 15;
+        
+        // Check if we need a new page
+        if (yPosition > 240) {
+            doc.addPage();
+            yPosition = 30;
+        }
+        
+        doc.setFillColor(255, 243, 224);
+        doc.rect(marginLeft, yPosition, contentWidth, 30, 'F');
+        
+        doc.setTextColor(...darkColor);
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('INFORMACIÓN IMPORTANTE:', marginLeft + 5, yPosition + 8);
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(...grayColor);
+        doc.text('• Los precios mostrados son de referencia. Un asesor le proporcionará los precios finales.', marginLeft + 5, yPosition + 15);
+        doc.text('• Ofrecemos financiamiento a 9 meses sin intereses.', marginLeft + 5, yPosition + 21);
+        doc.text('• Esta cotización tiene una vigencia de 30 días.', marginLeft + 5, yPosition + 27);
+        
+        // Add energy cost estimation if applicable
+        if (totalEnergyCost > 0) {
+            yPosition += 35;
+            
+            // Check if we need a new page
+            if (yPosition > 240) {
+                doc.addPage();
+                yPosition = 30;
+            }
+            
+            doc.setFillColor(232, 244, 248);
+            doc.rect(marginLeft, yPosition, contentWidth, 25, 'F');
+            
+            doc.setTextColor(...darkColor);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.text('ANÁLISIS DE AHORRO ENERGÉTICO:', marginLeft + 5, yPosition + 8);
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.setTextColor(...grayColor);
+            doc.text(`Costo energético mensual estimado: $${totalEnergyCost.toLocaleString('es-MX')} MXN`, marginLeft + 5, yPosition + 15);
+            doc.text(`Ahorro anual estimado con equipos eficientes: $${(totalEnergyCost * 3).toLocaleString('es-MX')} MXN`, marginLeft + 5, yPosition + 21);
+        }
+        
+        // Footer
+        const footerY = 270;
+        doc.setDrawColor(...primaryColor);
+        doc.setLineWidth(0.5);
+        doc.line(marginLeft, footerY, pageWidth - marginRight, footerY);
+        
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...grayColor);
+        doc.text('IATAMA - Ingeniería Aplicada en Tratamiento de Agua y Medio Ambiente', pageWidth / 2, footerY + 6, { align: 'center' });
+        doc.text('Tel: (01999) 2879003 | Email: ventas@iatama.com.mx', pageWidth / 2, footerY + 11, { align: 'center' });
+        doc.text('Calle 69 #183 x 8C y Av. Pedagógica, Col. San Antonio Kaua, Mérida, Yucatán', pageWidth / 2, footerY + 16, { align: 'center' });
+        
+        // Save the PDF
+        doc.save(`cotizacion_iatama_${quoteNumber}.pdf`);
     }
 
     function showToast(message, type = 'info') {
