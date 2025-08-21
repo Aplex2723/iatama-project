@@ -1,0 +1,264 @@
+/* Presupuestar Section Custom Styles */
+
+/* Product Catalog Styles */
+.catalog-section {
+    padding: 20px 0;
+}
+
+.products-grid {
+    min-height: 400px;
+}
+
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.product-card .card-img-top {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    opacity: 0.8;
+}
+
+.product-card .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.product-card .card-text {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+/* Categories Sidebar */
+.categories-sidebar {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    position: sticky;
+    top: 100px;
+}
+
+.categories-sidebar h5 {
+    color: #2c3e50;
+    font-weight: 600;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 10px;
+}
+
+.categories-sidebar .list-group-item {
+    border: none;
+    background-color: transparent;
+    color: #5a6c7d;
+    transition: all 0.3s ease;
+    padding: 12px 15px;
+    margin-bottom: 5px;
+}
+
+.categories-sidebar .list-group-item:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--accent-color);
+    padding-left: 20px;
+}
+
+.categories-sidebar .list-group-item.active {
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 5px;
+}
+
+.categories-sidebar .list-group-item i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+/* Shopping Cart Section */
+.cart-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+
+.cart-section h4 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.cart-section h4 i {
+    color: var(--accent-color);
+    margin-right: 10px;
+}
+
+#cartTable {
+    margin-bottom: 0;
+}
+
+#cartTable thead {
+    background-color: #f8f9fa;
+}
+
+#cartTable thead th {
+    border-bottom: 2px solid var(--accent-color);
+    color: #2c3e50;
+    font-weight: 600;
+    padding: 15px 10px;
+}
+
+#cartTable tbody td {
+    vertical-align: middle;
+    padding: 15px 10px;
+}
+
+.empty-cart {
+    padding: 60px 20px !important;
+}
+
+.empty-cart i {
+    color: #bdc3c7;
+    margin-bottom: 15px;
+}
+
+.empty-cart p {
+    color: #95a5a6;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.quantity-btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+#cartFooter {
+    background-color: #f8f9fa;
+}
+
+#cartFooter td {
+    padding: 15px 10px;
+    font-size: 1.1rem;
+}
+
+/* Download Button */
+#downloadBtn {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#downloadBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+}
+
+#downloadBtn i {
+    margin-right: 10px;
+}
+
+/* Modal Styles */
+#userInfoModal .modal-header {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+#userInfoModal .modal-title {
+    font-weight: 600;
+}
+
+#userInfoModal .btn-close {
+    filter: brightness(0) invert(1);
+}
+
+#userInfoModal .form-label {
+    color: #2c3e50;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+#userInfoModal .form-control {
+    border: 1px solid #dee2e6;
+    padding: 10px 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#userInfoModal .form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+#userInfoModal .modal-footer {
+    background-color: #f8f9fa;
+}
+
+#confirmDownload {
+    background-color: var(--accent-color);
+    border: none;
+    padding: 10px 25px;
+    font-weight: 500;
+}
+
+#confirmDownload:hover {
+    background-color: #2980b9;
+}
+
+/* Toast Notifications */
+.toast-container {
+    z-index: 9999;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .categories-sidebar {
+        position: relative;
+        top: auto;
+        margin-bottom: 30px;
+    }
+    
+    .catalog-section .row {
+        flex-direction: column-reverse;
+    }
+    
+    .product-card {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .cart-section {
+        padding: 20px 15px;
+    }
+    
+    #cartTable {
+        font-size: 0.9rem;
+    }
+    
+    #cartTable thead th,
+    #cartTable tbody td {
+        padding: 10px 5px;
+    }
+    
+    .quantity-btn {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+    }
+    
+    #downloadBtn {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+}
