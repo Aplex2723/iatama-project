@@ -2,38 +2,10 @@
 (function() {
     'use strict';
 
-    // Sample product data (in production, this would come from a database)
-    const products = [
-        // Bombas y Motores
-        { id: 1, name: 'Bomba Sumergible 1 HP', description: 'Bomba sumergible de alta eficiencia', category: 'bombas', price: 5500, energyCost: 150, image: 'assets/img/products/bomba1.jpg' },
-        { id: 2, name: 'Bomba Centrífuga 2 HP', description: 'Bomba centrífuga industrial', category: 'bombas', price: 8500, energyCost: 280, image: 'assets/img/products/bomba2.jpg' },
-        { id: 3, name: 'Motor Eléctrico 3 HP', description: 'Motor trifásico de alta eficiencia', category: 'bombas', price: 12000, energyCost: 420, image: 'assets/img/products/motor1.jpg' },
-        
-        // Purificación
-        { id: 4, name: 'Sistema Ósmosis Inversa 500 GPD', description: 'Sistema completo de ósmosis inversa', category: 'purificacion', price: 45000, energyCost: 500, image: 'assets/img/products/osmosis1.jpg' },
-        { id: 5, name: 'Filtro de Carbón Activado', description: 'Filtro de carbón de alta capacidad', category: 'purificacion', price: 2500, energyCost: 0, image: 'assets/img/products/filtro1.jpg' },
-        { id: 6, name: 'Lámpara UV Esterilizadora', description: 'Sistema de desinfección UV', category: 'purificacion', price: 8500, energyCost: 80, image: 'assets/img/products/uv1.jpg' },
-        
-        // Tratamiento
-        { id: 7, name: 'Planta de Tratamiento Compacta', description: 'Planta de tratamiento para 100 personas', category: 'tratamiento', price: 180000, energyCost: 1200, image: 'assets/img/products/planta1.jpg' },
-        { id: 8, name: 'Sistema de Cloración', description: 'Sistema automático de cloración', category: 'tratamiento', price: 15000, energyCost: 50, image: 'assets/img/products/cloro1.jpg' },
-        { id: 9, name: 'Tanque de Sedimentación', description: 'Tanque de sedimentación 5000L', category: 'tratamiento', price: 25000, energyCost: 0, image: 'assets/img/products/tanque1.jpg' },
-        
-        // Calentadores
-        { id: 10, name: 'Calentador Solar 150L', description: 'Calentador solar de tubos evacuados', category: 'calentadores', price: 18000, energyCost: 0, image: 'assets/img/products/solar1.jpg' },
-        { id: 11, name: 'Calentador de Paso 20L', description: 'Calentador de paso a gas', category: 'calentadores', price: 8500, energyCost: 0, image: 'assets/img/products/gas1.jpg' },
-        { id: 12, name: 'Calentador Eléctrico 80L', description: 'Calentador eléctrico de depósito', category: 'calentadores', price: 12000, energyCost: 350, image: 'assets/img/products/electrico1.jpg' },
-        
-        // Piscinas
-        { id: 13, name: 'Bomba para Piscina 1.5 HP', description: 'Bomba autocebante para piscina', category: 'piscinas', price: 9500, energyCost: 210, image: 'assets/img/products/piscina1.jpg' },
-        { id: 14, name: 'Filtro de Arena 24"', description: 'Filtro de arena para piscina', category: 'piscinas', price: 15000, energyCost: 0, image: 'assets/img/products/filtro_arena.jpg' },
-        { id: 15, name: 'Clorador Salino', description: 'Sistema de cloración salina', category: 'piscinas', price: 22000, energyCost: 150, image: 'assets/img/products/clorador.jpg' },
-        
-        // Accesorios
-        { id: 16, name: 'Válvula Check 2"', description: 'Válvula check de bronce', category: 'accesorios', price: 850, energyCost: 0, image: 'assets/img/products/valvula1.jpg' },
-        { id: 17, name: 'Manómetro Digital', description: 'Manómetro digital de precisión', category: 'accesorios', price: 2200, energyCost: 0, image: 'assets/img/products/manometro.jpg' },
-        { id: 18, name: 'Kit de Conexiones PVC', description: 'Kit completo de conexiones', category: 'accesorios', price: 1500, energyCost: 0, image: 'assets/img/products/kit_pvc.jpg' }
-    ];
+    // Load real products data from products-data.js
+    // Note: iatamaProducts and productCategories are loaded from products-data.js
+    const products = typeof iatamaProducts !== 'undefined' ? iatamaProducts : [];
+    const categories = typeof productCategories !== 'undefined' ? productCategories : {};
 
     // Shopping cart
     let cart = [];
@@ -78,18 +50,20 @@
     }
 
     function createProductCard(product) {
-        const placeholder = 'assets/img/product-placeholder.jpg';
+        // Use actual product image or placeholder
+        const imageSrc = product.image || 'assets/img/product-placeholder.svg';
         return `
             <div class="col-md-6 col-lg-4">
                 <div class="card product-card h-100">
-                    <img src="${placeholder}" class="card-img-top" alt="${product.name}" style="height: 200px; object-fit: cover;">
+                    <img src="${imageSrc}" class="card-img-top" alt="${product.name}" style="height: 200px; object-fit: cover;" onerror="this.src='assets/img/product-placeholder.svg'">
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title">${product.name}</h6>
                         <p class="card-text small">${product.description}</p>
                         <div class="mt-auto">
-                            <p class="text-muted mb-2">
-                                <small>Categoría: ${getCategoryLabel(product.category)}</small>
-                            </p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="text-muted">Categoría: ${getCategoryLabel(product.category)}</small>
+                                <span class="badge bg-success">$${product.price.toLocaleString('es-MX')}</span>
+                            </div>
                             <button class="btn btn-primary btn-sm w-100 add-to-cart" data-product-id="${product.id}">
                                 <i class="bi bi-cart-plus"></i> Agregar al Carrito
                             </button>
@@ -101,12 +75,20 @@
     }
 
     function getCategoryLabel(category) {
+        // Use categories from products-data.js if available
+        if (categories && categories[category]) {
+            return categories[category].label;
+        }
+        // Fallback labels
         const labels = {
+            'quimicos': 'Químicos y Detergentes',
+            'filtros': 'Filtros y Cartuchos',
             'bombas': 'Bombas y Motores',
-            'purificacion': 'Purificación',
-            'tratamiento': 'Tratamiento',
-            'calentadores': 'Calentadores',
-            'piscinas': 'Piscinas',
+            'osmosis': 'Ósmosis Inversa',
+            'industrial': 'Equipos Industriales',
+            'tratamiento': 'Tratamiento de Agua',
+            'piscinas': 'Piscinas y Spa',
+            'tanques': 'Tanques y Depósitos',
             'accesorios': 'Accesorios'
         };
         return labels[category] || category;
