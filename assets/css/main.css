@@ -18,11 +18,15 @@
 }
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
-:root { 
+:root {
   --background-color: #ffffff; /* Background color for the entire website, including individual sections */
   --default-color: #444444; /* Default color used for the majority of the text content across the entire website */
-  --heading-color: #0b2341; /* Color for headings, subheadings and title throughout the website */
-  --accent-color: #2E86AB; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --heading-color: #1d5d8b; /* Color for headings, subheadings and title throughout the website */
+  --accent-color: #1d5d8b; /* Accent color that represents your brand on the website. It's used for buttons, links, and other elements that need to stand out */
+  --secondary-color: #6c924a; /* Secondary dark green color */
+  --tertiary-color: #90c3e8; /* Light blue water color */
+  --quaternary-color: #427591; /* Medium blue color */
+  --light-green-color: #9eb813; /* Light green color */
   --surface-color: #ffffff; /* The surface color is used as a background of boxed elements within sections, such as cards, icon boxes, or other elements that require a visual separation from the global background. */
   --contrast-color: #ffffff; /* Contrast color for text, ensuring readability against backgrounds of accent, heading, or default colors. */
 }
@@ -30,11 +34,11 @@
 /* Nav Menu Colors - The following color variables are used specifically for the navigation menu. They are separate from the global colors to allow for more customization options */
 :root {
   --nav-color: #444444;  /* The default color of the main navmenu links */
-  --nav-hover-color: #2E86AB; /* Applied to main navmenu links when they are hovered over or active */
+  --nav-hover-color: #1d5d8b; /* Applied to main navmenu links when they are hovered over or active */
   --nav-mobile-background-color: #ffffff; /* Used as the background color for mobile navigation menu */
   --nav-dropdown-background-color: #ffffff; /* Used as the background color for dropdown items that appear when hovering over primary navigation items */
   --nav-dropdown-color: #444444; /* Used for navigation links of the dropdown items in the navigation menu. */
-  --nav-dropdown-hover-color: #2E86AB; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
+  --nav-dropdown-hover-color: #1d5d8b; /* Similar to --nav-hover-color, this color is applied to dropdown navigation links when they are hovered over. */
 }
 
 /* Color Presets - These classes override global colors when applied to any section or element, providing reuse of the sam color scheme. */
@@ -42,6 +46,18 @@
 .light-background {
   --background-color: #E8F4F8;
   --surface-color: #ffffff;
+}
+
+.water-blue-background {
+  --background-color: #90c3e8;
+  --surface-color: #ffffff;
+}
+
+.green-background {
+  --background-color: #6c924a;
+  --surface-color: #ffffff;
+  --default-color: #ffffff;
+  --heading-color: #ffffff;
 }
 
 .dark-background {
@@ -55,6 +71,55 @@
 /* Smooth scroll */
 :root {
   scroll-behavior: smooth;
+}
+
+/*--------------------------------------------------------------
+# Announcement Bar
+--------------------------------------------------------------*/
+.announcement-bar {
+  width: 100%;
+  background: linear-gradient(90deg, #1d5d8b 0%, #427591 50%, #1d5d8b 100%);
+  color: white;
+  overflow: hidden;
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
+
+.announcement-content {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll-left 40s linear infinite;
+  gap: 0;
+}
+
+.announcement-item {
+  padding: 0 3rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.announcement-item i {
+  font-size: 1rem;
+  color: #9eb813;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.announcement-content:hover {
+  animation-play-state: paused;
 }
 
 /*--------------------------------------------------------------
@@ -662,7 +727,7 @@ h6 {
   visibility: hidden;
   opacity: 0;
   right: 15px;
-  bottom: 15px;
+  bottom: 90px;
   z-index: 99999;
   background-color: var(--accent-color);
   width: 40px;

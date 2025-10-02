@@ -238,46 +238,71 @@
         return true;
     }
 
-    function downloadExcel() {
+    async function downloadExcel() {
         // Get user info
         const userName = document.getElementById('userName').value;
         const userPhone = document.getElementById('userPhone').value;
         const userEmail = document.getElementById('userEmail').value;
         const userCompany = document.getElementById('userCompany').value;
 
-        // Create PDF instead of CSV
-        generatePDF({
+        const userInfo = {
             name: userName,
             phone: userPhone,
             email: userEmail,
             company: userCompany,
-            date: new Date().toLocaleDateString('es-MX', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+            date: new Date().toLocaleDateString('es-MX', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
             })
-        });
+        };
 
         // Close modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('userInfoModal'));
         modal.hide();
 
-        // Show success message
-        showToast('Cotización descargada exitosamente', 'success');
+        // Show processing message
+        showToast('Procesando su cotización...', 'info');
+
+        // Generate PDF and attempt to send via email
+        try {
+            const pdfBase64 = await generatePDFBase64(userInfo);
+
+            // Try to send email
+            const emailSent = await sendQuoteEmail(pdfBase64, userInfo);
+
+            if (emailSent) {
+                // Email sent successfully, also download
+                downloadPDFFromBase64(pdfBase64, userInfo);
+                showToast('Cotización enviada a su correo y descargada exitosamente', 'success');
+            } else {
+                // Email failed, fallback to download only
+                downloadPDFFromBase64(pdfBase64, userInfo);
+                showToast('No se pudo enviar el email. La cotización ha sido descargada.', 'warning');
+            }
+        } catch (error) {
+            console.error('Error al procesar cotización:', error);
+            // Fallback: generate and download PDF directly
+            generatePDF(userInfo);
+            showToast('Error al enviar email. La cotización ha sido descargada.', 'warning');
+        }
 
         // Reset form
         document.getElementById('userInfoForm').reset();
         document.getElementById('userInfoForm').classList.remove('was-validated');
     }
 
-    function generatePDF(userInfo) {
+    function createPDFDocument(userInfo) {
         // Initialize jsPDF with A4 format
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
-        // IATAMA Colors based on the CSS variables
-        const primaryColor = [46, 134, 171]; // #2E86AB
-        const darkColor = [11, 35, 65]; // #0b2341
+        // IATAMA Colors - Updated brand colors
+        const primaryColor = [29, 93, 139]; // #1d5d8b - Main blue
+        const darkGreenColor = [108, 146, 74]; // #6c924a - Dark green
+        const waterBlueColor = [144, 195, 232]; // #90c3e8 - Water blue
+        const mediumBlueColor = [66, 117, 145]; // #427591 - Medium blue
+        const lightGreenColor = [158, 184, 19]; // #9eb813 - Light green
         const grayColor = [68, 68, 68]; // #444444
         
         // Document margins
@@ -302,7 +327,7 @@
         doc.text('Ingeniería Aplicada en Tratamiento de Agua y Medio Ambiente', marginLeft, 28);
         
         // Document title
-        doc.setTextColor(...darkColor);
+        doc.setTextColor(...primaryColor);
         doc.setFontSize(20);
         doc.setFont('helvetica', 'bold');
         doc.text('COTIZACIÓN', pageWidth / 2, 55, { align: 'center' });
@@ -317,17 +342,17 @@
         
         // Client information section
         let yPosition = 80;
-        doc.setFillColor(245, 247, 250);
+        doc.setFillColor(...waterBlueColor);
         doc.rect(marginLeft, yPosition - 5, contentWidth, 35, 'F');
-        
-        doc.setTextColor(...darkColor);
+
+        doc.setTextColor(255, 255, 255);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.text('INFORMACIÓN DEL CLIENTE', marginLeft + 5, yPosition);
         
         doc.setFontSize(10);
         doc.setFont('helvetica', 'normal');
-        doc.setTextColor(...grayColor);
+        doc.setTextColor(255, 255, 255);
         yPosition += 8;
         doc.text(`Cliente: ${userInfo.name}`, marginLeft + 5, yPosition);
         yPosition += 6;
@@ -338,7 +363,7 @@
         
         // Products table
         yPosition = 125;
-        doc.setTextColor(...darkColor);
+        doc.setTextColor(...primaryColor);
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.text('PRODUCTOS COTIZADOS', marginLeft, yPosition);
@@ -407,17 +432,17 @@
             yPosition = 30;
         }
         
-        doc.setFillColor(255, 243, 224);
+        doc.setFillColor(...lightGreenColor);
         doc.rect(marginLeft, yPosition, contentWidth, 30, 'F');
-        
-        doc.setTextColor(...darkColor);
+
+        doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
         doc.setFont('helvetica', 'bold');
         doc.text('INFORMACIÓN IMPORTANTE:', marginLeft + 5, yPosition + 8);
         
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9);
-        doc.setTextColor(...grayColor);
+        doc.setTextColor(255, 255, 255);
         doc.text('• Los precios mostrados son de referencia. Un asesor le proporcionará los precios finales.', marginLeft + 5, yPosition + 15);
         doc.text('• Ofrecemos financiamiento a 9 meses sin intereses.', marginLeft + 5, yPosition + 21);
         doc.text('• Esta cotización tiene una vigencia de 30 días.', marginLeft + 5, yPosition + 27);
@@ -432,17 +457,17 @@
                 yPosition = 30;
             }
             
-            doc.setFillColor(232, 244, 248);
+            doc.setFillColor(...darkGreenColor);
             doc.rect(marginLeft, yPosition, contentWidth, 25, 'F');
-            
-            doc.setTextColor(...darkColor);
+
+            doc.setTextColor(255, 255, 255);
             doc.setFontSize(10);
             doc.setFont('helvetica', 'bold');
             doc.text('ANÁLISIS DE AHORRO ENERGÉTICO:', marginLeft + 5, yPosition + 8);
             
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
-            doc.setTextColor(...grayColor);
+            doc.setTextColor(255, 255, 255);
             doc.text(`Costo energético mensual estimado: $${totalEnergyCost.toLocaleString('es-MX')} MXN`, marginLeft + 5, yPosition + 15);
             doc.text(`Ahorro anual estimado con equipos eficientes: $${(totalEnergyCost * 3).toLocaleString('es-MX')} MXN`, marginLeft + 5, yPosition + 21);
         }
@@ -459,9 +484,82 @@
         doc.text('IATAMA - Ingeniería Aplicada en Tratamiento de Agua y Medio Ambiente', pageWidth / 2, footerY + 6, { align: 'center' });
         doc.text('Tel: (01999) 2879003 | Email: ventas@iatama.com.mx', pageWidth / 2, footerY + 11, { align: 'center' });
         doc.text('Calle 69 #183 x 8C y Av. Pedagógica, Col. San Antonio Kaua, Mérida, Yucatán', pageWidth / 2, footerY + 16, { align: 'center' });
-        
+
+        return { doc, quoteNumber };
+    }
+
+    function generatePDF(userInfo) {
+        const { doc, quoteNumber } = createPDFDocument(userInfo);
         // Save the PDF
         doc.save(`cotizacion_iatama_${quoteNumber}.pdf`);
+    }
+
+    function generatePDFBase64(userInfo) {
+        return new Promise((resolve, reject) => {
+            try {
+                const { doc } = createPDFDocument(userInfo);
+                // Get PDF as base64 string
+                const pdfBase64 = doc.output('datauristring').split(',')[1];
+                resolve(pdfBase64);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    function downloadPDFFromBase64(pdfBase64, userInfo) {
+        try {
+            // Convert base64 to blob
+            const byteCharacters = atob(pdfBase64);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            const quoteNumber = 'COT-' + Date.now().toString().slice(-8);
+            link.href = url;
+            link.download = `cotizacion_iatama_${quoteNumber}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error al descargar PDF:', error);
+            throw error;
+        }
+    }
+
+    async function sendQuoteEmail(pdfBase64, userInfo) {
+        try {
+            const response = await fetch('send-quote.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    pdfData: pdfBase64,
+                    userInfo: userInfo
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                console.log('Email enviado exitosamente:', result);
+                return true;
+            } else {
+                console.error('Error al enviar email:', result.error);
+                return false;
+            }
+        } catch (error) {
+            console.error('Error en la solicitud de email:', error);
+            return false;
+        }
     }
 
     function showToast(message, type = 'info') {

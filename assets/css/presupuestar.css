@@ -20,7 +20,7 @@
 }
 
 .product-card .card-img-top {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1d5d8b 0%, #90c3e8 100%);
     opacity: 0.8;
 }
 
@@ -61,7 +61,7 @@
 }
 
 .categories-sidebar .list-group-item:hover {
-    background-color: rgba(52, 152, 219, 0.1);
+    background-color: rgba(144, 195, 232, 0.3);
     color: var(--accent-color);
     padding-left: 20px;
 }
@@ -152,7 +152,7 @@
 
 /* Download Button */
 #downloadBtn {
-    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    background: linear-gradient(135deg, #6c924a 0%, #9eb813 100%);
     border: none;
     padding: 12px 30px;
     font-size: 1.1rem;
@@ -162,7 +162,7 @@
 
 #downloadBtn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    box-shadow: 0 5px 15px rgba(108, 146, 74, 0.3);
 }
 
 #downloadBtn i {
@@ -212,7 +212,7 @@
 }
 
 #confirmDownload:hover {
-    background-color: #2980b9;
+    background-color: #427591;
 }
 
 /* Toast Notifications */
