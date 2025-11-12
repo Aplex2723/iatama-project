@@ -1,0 +1,399 @@
+/**
+* Simulador de Utilidades - IATAMA
+* Custom styles for the profit simulator
+*/
+
+/* Override primary colors with lighter blue */
+.simulator-page {
+  --accent-color: #4A9FDB;
+  --heading-color: #3A8BC8;
+  --quaternary-color: #5CB3E6;
+  --tertiary-color: #A8D5F2;
+}
+
+/* Simulator Section */
+.simulator {
+  padding: 80px 0 60px 0;
+  min-height: calc(100vh - 300px);
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Business Selection Cards */
+.business-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.business-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(74, 159, 219, 0.2);
+  border-color: var(--accent-color);
+}
+
+.business-card.selected {
+  background: linear-gradient(135deg, #4A9FDB 0%, #5CB3E6 100%);
+  color: white;
+  transform: scale(1.05);
+}
+
+.business-card .card-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--tertiary-color) 0%, var(--accent-color) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  transition: all 0.3s ease;
+}
+
+.business-card.selected .card-icon {
+  background: white;
+}
+
+.business-card .card-icon i {
+  font-size: 35px;
+  color: white;
+}
+
+.business-card.selected .card-icon i {
+  color: var(--accent-color);
+}
+
+.business-card h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--heading-color);
+}
+
+.business-card.selected h4 {
+  color: white;
+}
+
+.business-card p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.business-card.selected p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Calculator Form */
+.calculator-form {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  animation: slideInUp 0.5s ease;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calculator-form h3 {
+  color: var(--heading-color);
+  font-weight: 600;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 3px solid var(--accent-color);
+}
+
+.calculator-form #business-name {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.form-label i {
+  color: var(--accent-color);
+}
+
+.form-select,
+.form-control {
+  border-radius: 10px;
+  border: 2px solid #e0e6ed;
+  padding: 12px 15px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 0.2rem rgba(74, 159, 219, 0.15);
+}
+
+.input-group-text {
+  background: var(--accent-color);
+  color: white;
+  border: none;
+  font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--quaternary-color) 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(74, 159, 219, 0.3);
+  background: linear-gradient(135deg, var(--quaternary-color) 0%, var(--accent-color) 100%);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(108, 117, 125, 0.3);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+}
+
+.btn-info {
+  background: linear-gradient(135deg, #17a2b8 0%, #20c9ea 100%);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(23, 162, 184, 0.3);
+}
+
+/* Results Section */
+.results-card {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.results-card h3 {
+  color: var(--heading-color);
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+/* Cost Table */
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--quaternary-color) 100%);
+  color: white;
+}
+
+.table thead th {
+  border: none;
+  padding: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+  background: rgba(74, 159, 219, 0.05);
+  transform: scale(1.01);
+}
+
+.table tfoot {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Profit Cards */
+.profit-summary {
+  margin-top: 40px;
+}
+
+.profit-card {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  border-radius: 15px;
+  padding: 30px 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.profit-card:hover {
+  transform: translateY(-5px);
+}
+
+.profit-card.daily {
+  border-left: 5px solid #4A9FDB;
+}
+
+.profit-card.weekly {
+  border-left: 5px solid #5CB3E6;
+}
+
+.profit-card.monthly {
+  border-left: 5px solid #3A8BC8;
+  background: linear-gradient(135deg, var(--tertiary-color) 0%, white 100%);
+}
+
+.profit-card i {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  margin-bottom: 15px;
+}
+
+.profit-card h5 {
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.profit-amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--heading-color);
+  margin: 0;
+}
+
+/* Alert Customization */
+.alert-info {
+  background: linear-gradient(135deg, rgba(74, 159, 219, 0.1) 0%, rgba(92, 179, 230, 0.1) 100%);
+  border: 2px solid var(--accent-color);
+  color: #333;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.alert-info strong {
+  color: var(--heading-color);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .business-card {
+    min-height: 180px;
+    padding: 20px 15px;
+  }
+
+  .business-card h4 {
+    font-size: 1rem;
+  }
+
+  .calculator-form {
+    padding: 25px 20px;
+  }
+
+  .results-card {
+    padding: 25px 20px;
+  }
+
+  .profit-amount {
+    font-size: 1.5rem;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+}
+
+/* Loading Animation */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(74, 159, 219, 0.3);
+  border-radius: 50%;
+  border-top-color: var(--accent-color);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* PDF Export Styles */
+.pdf-header {
+  background: var(--accent-color);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.pdf-footer {
+  background: #f8f9fa;
+  padding: 15px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #666;
+}

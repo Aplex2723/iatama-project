@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Simulador de Utilidades - IATAMA</title>
+  <meta name="description" content="Calcula las utilidades esperadas de tu negocio de purificación de agua con IATAMA">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+  <link href="assets/css/simulador.css" rel="stylesheet">
+
+  <!-- jsPDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+
+<body class="simulator-page">
+
+  <!-- Announcement Bar -->
+  <div id="announcement-bar" class="announcement-bar">
+    <div class="announcement-content">
+      <span class="announcement-item">
+        <i class="bi bi-tag"></i> Financiamiento hasta 9 meses sin intereses
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-shield-check"></i> Servicio técnico especializado en toda la península
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-truck"></i> Envíos a toda la República Mexicana
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-award"></i> Más de 20 años de experiencia
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-phone"></i> Asesoría personalizada sin costo
+      </span>
+      <!-- Duplicate for seamless loop -->
+      <span class="announcement-item">
+        <i class="bi bi-tag"></i> Financiamiento hasta 9 meses sin intereses
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-shield-check"></i> Servicio técnico especializado en toda la península
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-truck"></i> Envíos a toda la República Mexicana
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-award"></i> Más de 20 años de experiencia
+      </span>
+      <span class="announcement-item">
+        <i class="bi bi-phone"></i> Asesoría personalizada sin costo
+      </span>
+    </div>
+  </div>
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+
+      <a href="index.html" class="logo d-flex align-items-center me-auto">
+        <img src="assets/img/LOGOIATAMA.png" alt="IATAMA" style="max-height: 60px;">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="index.html#about">Nosotros</a></li>
+          <li><a href="index.html#services">Servicios</a></li>
+          <li><a href="index.html#portfolio">Catálogos</a></li>
+          <li><a href="index.html#presupuestar">Presupuestar</a></li>
+          <li><a href="simulador-utilidades.html" class="active">Simulador</a></li>
+          <li><a href="index.html#contact">Contacto</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <a class="btn-getstarted" href="index.html">Volver</a>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Simulator Section -->
+    <section id="simulator" class="simulator section">
+      
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Simulador de Utilidades</h2>
+        <div><span>Calcula las ganancias</span> <span class="description-title">esperadas de tu negocio</span></div>
+      </div>
+
+      <div class="container">
+        
+        <!-- Disclaimer -->
+        <div class="alert alert-info mb-5" data-aos="fade-up" data-aos-delay="100">
+          <i class="bi bi-info-circle me-2"></i>
+          <strong>Nota importante:</strong> Este simulador proporciona estimaciones basadas en valores promedio del mercado. 
+          Los resultados reales pueden variar según factores como ubicación, competencia local, eficiencia operativa 
+          y condiciones del mercado. Estas cifras son únicamente referencias y no garantizan resultados específicos.
+        </div>
+
+        <!-- Business Type Selection -->
+        <div class="business-selection mb-5" data-aos="fade-up" data-aos-delay="200">
+          <h3 class="mb-4 text-center">Selecciona el tipo de negocio</h3>
+          <div class="row g-3">
+            <div class="col-lg-4 col-md-6">
+              <div class="business-card" data-business="purificadora-basica">
+                <div class="card-icon">
+                  <i class="bi bi-droplet"></i>
+                </div>
+                <h4>Purificadora Básica</h4>
+                <p>Sistema básico de purificación</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="business-card" data-business="purificadora-osmosis">
+                <div class="card-icon">
+                  <i class="bi bi-droplet-half"></i>
+                </div>
+                <h4>Purificadora c/ Ósmosis Inversa</h4>
+                <p>Sistema avanzado con ósmosis inversa</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="business-card" data-business="ventana-24hrs">
+                <div class="card-icon">
+                  <i class="bi bi-shop-window"></i>
+                </div>
+                <h4>Ventana 24hrs Básica</h4>
+                <p>Ventana despachadora automática</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="business-card" data-business="ventana-24hrs-osmosis">
+                <div class="card-icon">
+                  <i class="bi bi-shop"></i>
+                </div>
+                <h4>Ventana 24hrs c/ Ósmosis</h4>
+                <p>Ventana con sistema de ósmosis</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="business-card" data-business="vending-basico">
+                <div class="card-icon">
+                  <i class="bi bi-box-seam"></i>
+                </div>
+                <h4>Vending 24hrs Básico</h4>
+                <p>Máquina expendedora básica</p>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+              <div class="business-card" data-business="vending-osmosis">
+                <div class="card-icon">
+                  <i class="bi bi-box-seam-fill"></i>
+                </div>
+                <h4>Vending 24hrs c/ Ósmosis</h4>
+                <p>Máquina expendedora con ósmosis</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calculator Form -->
+        <div id="calculator-section" style="display: none;" data-aos="fade-up" data-aos-delay="300">
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <div class="calculator-form">
+                <h3 class="mb-4">Configuración del Negocio: <span id="business-name"></span></h3>
+                
+                <form id="profit-form">
+                  <div class="mb-4">
+                    <label for="production" class="form-label">
+                      <i class="bi bi-water me-2"></i>Producción diaria (garrafones)
+                    </label>
+                    <select class="form-select" id="production" required>
+                      <option value="">Selecciona la producción diaria</option>
+                      <option value="50">50 garrafones</option>
+                      <option value="100">100 garrafones</option>
+                      <option value="150">150 garrafones</option>
+                      <option value="200">200 garrafones</option>
+                      <option value="250">250 garrafones</option>
+                      <option value="300">300 garrafones</option>
+                      <option value="400">400 garrafones</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-4">
+                    <label for="sale-price" class="form-label">
+                      <i class="bi bi-currency-dollar me-2"></i>Precio de venta por garrafón
+                    </label>
+                    <div class="input-group">
+                      <span class="input-group-text">$</span>
+                      <input type="number" class="form-control" id="sale-price" value="15" min="1" step="0.50" required>
+                      <span class="input-group-text">MXN</span>
+                    </div>
+                  </div>
+
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                      <i class="bi bi-calculator me-2"></i>Calcular Utilidades
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-lg" id="reset-btn">
+                      <i class="bi bi-arrow-clockwise me-2"></i>Reiniciar
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Section -->
+          <div id="results-section" class="mt-5" style="display: none;">
+            <div class="row">
+              <div class="col-lg-10 mx-auto">
+                <div class="results-card">
+                  <h3 class="text-center mb-4">
+                    <i class="bi bi-graph-up-arrow me-2"></i>Resultados del Análisis
+                  </h3>
+                  
+                  <!-- Cost Breakdown Table -->
+                  <div class="table-responsive mb-4">
+                    <table class="table table-hover" id="costs-table">
+                      <thead>
+                        <tr>
+                          <th>Concepto</th>
+                          <th>Costo</th>
+                          <th>Unidad</th>
+                          <th>Costo Total</th>
+                        </tr>
+                      </thead>
+                      <tbody id="costs-tbody">
+                        <!-- Dynamic content -->
+                      </tbody>
+                      <tfoot>
+                        <tr class="table-light">
+                          <th colspan="3">Costo Total de Producción</th>
+                          <th id="total-production-cost">$0.00</th>
+                        </tr>
+                        <tr class="table-light">
+                          <th colspan="3">Costo por Garrafón</th>
+                          <th id="cost-per-bottle">$0.00</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </div>
+
+                  <!-- Profit Summary -->
+                  <div class="profit-summary">
+                    <div class="row text-center">
+                      <div class="col-md-4 mb-3">
+                        <div class="profit-card daily">
+                          <i class="bi bi-calendar-day"></i>
+                          <h5>Ganancia Diaria</h5>
+                          <p class="profit-amount" id="daily-profit">$0.00</p>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <div class="profit-card weekly">
+                          <i class="bi bi-calendar-week"></i>
+                          <h5>Ganancia Semanal</h5>
+                          <p class="profit-amount" id="weekly-profit">$0.00</p>
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <div class="profit-card monthly">
+                          <i class="bi bi-calendar-month"></i>
+                          <h5>Ganancia Mensual</h5>
+                          <p class="profit-amount" id="monthly-profit">$0.00</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                    <button type="button" class="btn btn-success btn-lg" id="download-pdf">
+                      <i class="bi bi-file-pdf me-2"></i>Descargar PDF
+                    </button>
+                    <button type="button" class="btn btn-info btn-lg" id="contact-btn">
+                      <i class="bi bi-telephone me-2"></i>Solicitar Cotización
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="d-flex align-items-center">
+            <span class="sitename">IATAMA</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>Mérida, Yucatán</p>
+            <p>México</p>
+            <p class="mt-3"><strong>Teléfono:</strong> <span>+52 999 123 4567</span></p>
+            <p><strong>Email:</strong> <span>info@iatama.com.mx</span></p>
+          </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 footer-links">
+          <h4>Enlaces Útiles</h4>
+          <ul>
+            <li><i class="bi bi-chevron-right"></i> <a href="index.html">Inicio</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="index.html#about">Nosotros</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="index.html#services">Servicios</a></li>
+            <li><i class="bi bi-chevron-right"></i> <a href="simulador-utilidades.html">Simulador de Utilidades</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+          <h4>Síguenos</h4>
+          <p>Mantente al día con nuestras novedades y promociones</p>
+          <div class="social-links d-flex">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">IATAMA</strong> <span>Todos los derechos reservados</span></p>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/simulador.js"></script>
+
+</body>
+
+</html>
