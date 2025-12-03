@@ -43,8 +43,19 @@
         mobileNavToogle();
       }
     });
-
   });
+
+  /**
+   * Hide mobile nav when clicking on overlay
+   */
+  const mobileNavOverlay = document.querySelector('.mobile-nav-overlay');
+  if (mobileNavOverlay) {
+    mobileNavOverlay.addEventListener('click', () => {
+      if (document.querySelector('.mobile-nav-active')) {
+        mobileNavToogle();
+      }
+    });
+  }
 
   /**
    * Toggle mobile nav dropdowns

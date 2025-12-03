@@ -137,6 +137,12 @@ function initializeEventListeners() {
     });
   }
 
+  // Recalculate button
+  const recalculateBtn = document.getElementById('recalculate-btn');
+  if (recalculateBtn) {
+    recalculateBtn.addEventListener('click', recalculateWithCustomCosts);
+  }
+
   // Update production options based on business type
   const productionSelect = document.getElementById('production');
   if (productionSelect) {
@@ -225,7 +231,7 @@ function validateProductionOption() {
 function calculateProfits() {
   const production = parseInt(document.getElementById('production').value);
   const salePrice = parseFloat(document.getElementById('sale-price').value);
-  
+
   if (!selectedBusiness || !production || !salePrice) {
     alert('Por favor completa todos los campos.');
     return;
@@ -233,16 +239,18 @@ function calculateProfits() {
 
   const business = businessData[selectedBusiness];
   const index = productionOptions[production];
-  
+
   // Calculate costs
   let totalCost = 0;
   const costBreakdown = [];
-  
+
+  // Use estimated costs from business data
   for (const [key, data] of Object.entries(business.costs)) {
     const costValue = data.perUnit[index];
     if (costValue !== null && costValue !== undefined) {
       totalCost += costValue;
       costBreakdown.push({
+        key: key,
         name: costItemNames[key],
         baseCost: data.base,
         unit: data.unit,
@@ -251,12 +259,13 @@ function calculateProfits() {
     }
   }
 
+  const costPerBottle = totalCost / production;
+
   // Calculate profits
   const revenue = production * salePrice;
   const dailyProfit = revenue - totalCost;
   const weeklyProfit = dailyProfit * 7;
   const monthlyProfit = dailyProfit * 30.4; // Average days per month
-  const costPerBottle = totalCost / production;
 
   // Store calculation for PDF export
   currentCalculation = {
@@ -276,46 +285,166 @@ function calculateProfits() {
   displayResults();
 }
 
+// Recalculate with custom base costs from inputs
+function recalculateWithCustomCosts() {
+  if (!currentCalculation || !selectedBusiness) return;
+
+  const production = currentCalculation.production;
+  const salePrice = currentCalculation.salePrice;
+  const business = businessData[selectedBusiness];
+  const index = productionOptions[production];
+
+  // Get all cost inputs and recalculate based on new base costs
+  let totalCost = 0;
+  const costBreakdown = [];
+
+  const costInputs = document.querySelectorAll('.cost-input');
+  costInputs.forEach((input, i) => {
+    const newBaseCost = parseFloat(input.value) || 0;
+    const key = input.dataset.key;
+    const originalData = business.costs[key];
+
+    // Calculate the ratio of new base cost to original base cost
+    let dailyCost = 0;
+    if (originalData && originalData.base > 0) {
+      const ratio = newBaseCost / originalData.base;
+      dailyCost = originalData.perUnit[index] * ratio;
+    } else {
+      dailyCost = newBaseCost;
+    }
+
+    totalCost += dailyCost;
+
+    // Update the daily cost display
+    const costTotalCell = document.getElementById(`cost-total-${i}`);
+    if (costTotalCell) {
+      costTotalCell.textContent = `$${dailyCost.toFixed(2)}`;
+    }
+
+    costBreakdown.push({
+      key: key,
+      name: input.dataset.name,
+      baseCost: newBaseCost,
+      unit: input.dataset.unit,
+      totalCost: dailyCost
+    });
+  });
+
+  const costPerBottle = totalCost / production;
+
+  // Calculate profits
+  const revenue = production * salePrice;
+  const dailyProfit = revenue - totalCost;
+  const weeklyProfit = dailyProfit * 7;
+  const monthlyProfit = dailyProfit * 30.4;
+
+  // Update current calculation
+  currentCalculation.costBreakdown = costBreakdown;
+  currentCalculation.totalCost = totalCost;
+  currentCalculation.costPerBottle = costPerBottle;
+  currentCalculation.dailyProfit = dailyProfit;
+  currentCalculation.weeklyProfit = weeklyProfit;
+  currentCalculation.monthlyProfit = monthlyProfit;
+
+  // Update display
+  updateProfitDisplay();
+}
+
 // Display calculation results
 function displayResults() {
   if (!currentCalculation) return;
 
-  // Populate cost table
+  // Populate cost table with editable base cost inputs
   const tbody = document.getElementById('costs-tbody');
   tbody.innerHTML = '';
-  
-  currentCalculation.costBreakdown.forEach(item => {
+
+  currentCalculation.costBreakdown.forEach((item, index) => {
     const row = tbody.insertRow();
     row.innerHTML = `
       <td>${item.name}</td>
-      <td>$${item.baseCost.toLocaleString('es-MX')}</td>
+      <td>
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">$</span>
+          <input type="number"
+                 class="form-control cost-input"
+                 value="${item.baseCost}"
+                 min="0"
+                 step="1"
+                 data-key="${item.key}"
+                 data-name="${item.name}"
+                 data-unit="${item.unit}"
+                 data-index="${index}">
+        </div>
+      </td>
       <td>${item.unit}</td>
-      <td>$${item.totalCost.toFixed(2)}</td>
+      <td class="cost-total" id="cost-total-${index}">$${item.totalCost.toFixed(2)}</td>
     `;
   });
 
-  // Update totals
-  document.getElementById('total-production-cost').textContent = 
-    `$${currentCalculation.totalCost.toFixed(2)}`;
-  document.getElementById('cost-per-bottle').textContent = 
-    `$${currentCalculation.costPerBottle.toFixed(2)}`;
+  // Add event listeners to cost inputs for live update
+  document.querySelectorAll('.cost-input').forEach(input => {
+    input.addEventListener('change', recalculateWithCustomCosts);
+    input.addEventListener('input', debounce(recalculateWithCustomCosts, 500));
+  });
 
-  // Update profit summary
-  document.getElementById('daily-profit').textContent = 
-    `$${currentCalculation.dailyProfit.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  document.getElementById('weekly-profit').textContent = 
-    `$${currentCalculation.weeklyProfit.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  document.getElementById('monthly-profit').textContent = 
-    `$${currentCalculation.monthlyProfit.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  // Update totals and profits
+  updateProfitDisplay();
 
   // Show results section
   const resultsSection = document.getElementById('results-section');
   resultsSection.style.display = 'block';
-  
+
   // Scroll to results
   setTimeout(() => {
     resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
+}
+
+// Update profit display without rebuilding the table
+function updateProfitDisplay() {
+  if (!currentCalculation) return;
+
+  // Update totals
+  document.getElementById('total-production-cost').textContent =
+    `$${currentCalculation.totalCost.toFixed(2)}`;
+  document.getElementById('cost-per-bottle').textContent =
+    `$${currentCalculation.costPerBottle.toFixed(2)}`;
+
+  // Update profit summary
+  document.getElementById('daily-profit').textContent =
+    `$${currentCalculation.dailyProfit.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById('weekly-profit').textContent =
+    `$${currentCalculation.weeklyProfit.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  document.getElementById('monthly-profit').textContent =
+    `$${currentCalculation.monthlyProfit.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  // Update profit card colors based on positive/negative
+  const dailyCard = document.querySelector('.profit-card.daily');
+  const weeklyCard = document.querySelector('.profit-card.weekly');
+  const monthlyCard = document.querySelector('.profit-card.monthly');
+
+  if (currentCalculation.dailyProfit < 0) {
+    dailyCard.classList.add('negative');
+    weeklyCard.classList.add('negative');
+    monthlyCard.classList.add('negative');
+  } else {
+    dailyCard.classList.remove('negative');
+    weeklyCard.classList.remove('negative');
+    monthlyCard.classList.remove('negative');
+  }
+}
+
+// Debounce function to limit recalculation frequency
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
 }
 
 // Reset calculator

@@ -157,7 +157,7 @@ try {
             <p>Nuestros asesores están a su disposición para cualquier consulta o aclaración.</p>
             <h3>Información de contacto:</h3>
             <ul>
-                <li><strong>Teléfono:</strong> (01999) 2879003</li>
+                <li><strong>Teléfono:</strong> (999) 263 0004</li>
                 <li><strong>Email:</strong> ventas@iatama.com.mx</li>
                 <li><strong>Dirección:</strong> Calle 69 #183 x 8C y Av. Pedagógica, Col. San Antonio Kaua, Mérida, Yucatán</li>
             </ul>
@@ -172,7 +172,7 @@ try {
         </div>
         <div class='footer'>
             <p>IATAMA - Ingeniería Aplicada en Tratamiento de Agua y Medio Ambiente<br>
-            Tel: (01999) 2879003 | Email: ventas@iatama.com.mx<br>
+            Tel: (999) 263 0004 | Email: ventas@iatama.com.mx<br>
             Calle 69 #183 x 8C y Av. Pedagógica, Col. San Antonio Kaua, Mérida, Yucatán</p>
         </div>
     </body>

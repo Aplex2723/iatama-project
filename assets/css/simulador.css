@@ -397,3 +397,64 @@
   font-size: 0.9rem;
   color: #666;
 }
+
+/* Editable Cost Inputs */
+.cost-input {
+  max-width: 120px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.cost-input:focus {
+  background-color: #fff3cd;
+  border-color: #ffc107;
+}
+
+.table tbody td .input-group {
+  min-width: 130px;
+}
+
+.table tbody td .input-group-text {
+  padding: 4px 8px;
+  font-size: 0.85rem;
+}
+
+/* Negative profit styling */
+.profit-card.negative {
+  border-left-color: #dc3545 !important;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe0e0 100%) !important;
+}
+
+.profit-card.negative .profit-amount {
+  color: #dc3545 !important;
+}
+
+.profit-card.negative i {
+  color: #dc3545;
+}
+
+/* Recalculate button */
+.btn-outline-primary {
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  border-radius: 10px;
+  padding: 10px 25px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background: var(--accent-color);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(74, 159, 219, 0.3);
+}
+
+/* Cost table improvements */
+#costs-table tbody tr {
+  vertical-align: middle;
+}
+
+#costs-table tbody td:last-child {
+  min-width: 150px;
+}
